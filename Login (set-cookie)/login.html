@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>login</title>
+</head>
+<body>
+<h3>Email</h3>
+<br>
+<input class="email" type="email" name="email">
+<br>
+<h3>Phone</h3>
+<input class="phone" type="phone" name="phone">
+<br>
+<button onclick="login()">LOGIN</button>
+<div id="Hello"></div>
+
+<script type="text/javascript">
+	
+function makeid() {
+  var text = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (var i = 0; i < 10; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return text;
+}
+// чтобы увидеть кукки document.cookie
+// установить кукки setCookie(name, hi, 1)
+// устанавливаем значение cookie 
+function setCookie(cname, cvalue, exdays) { // имя, значение, время жизни в днях
+    var d = new Date(); // берем текущую дату
+    d.setTime(d.getTime() + (exdays*24*60*60*1000)); // устанавливаем 1 день.
+    var expires = "expires="+ d.toUTCString(); // Метод toUTCString() преобразует дату в строку, используя часовой 												пояс UTC.
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/"; // текстовая строка  определения куки 																		путем сложения имени куки, переменной и 																	времени хранения куки. 
+}
+
+
+function login() {
+	var emailINPUT = document.getElementsByClassName("email")[0].value;
+	var PhoneINPUT = document.getElementsByClassName("phone")[0].value;
+	var Token = makeid();
+
+if (emailINPUT == "" || PhoneINPUT == "") {
+document.getElementById("Hello").innerHTML = "Пустные данные";
+return;
+}
+ 	else {
+xmlhttp = new XMLHttpRequest();
+xmlhttp.onreadystatechange = function() {
+	// document.getElementById("Hello").innerHTML = this.responseText;
+
+	if (this.readyState == 4 && this.status == 200)	{	//условие статуса
+	 	
+	if (this.responseText.search("True") != -1) {
+		// alert(document.cookie);
+		document.cookie="Token="+Token;
+		document.cookie="Email="+emailINPUT;
+		// document.location.replace('https://ya.ru');
+
+					}
+		else {
+				// console.log(this.responseText);
+	document.getElementById("Hello").innerHTML ="Пароль не верный";
+	document.getElementById("Hello").style.color = "red";
+			}					
+		}
+	};
+		
+xmlhttp.open("GET","login.php?EMAIL="+emailINPUT+"&PHONE="+PhoneINPUT+"&Token="+Token);
+xmlhttp.send();
+
+ 		}
+document.getElementsByClassName("email")[0].value="";
+document.getElementsByClassName("phone")[0].value="";
+
+	}
+</script>
+</body>
+</html>
